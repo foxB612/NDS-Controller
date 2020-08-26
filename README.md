@@ -24,7 +24,7 @@ This is a NDS homebrew program which can turn a NDS into a wireless gamepad for 
 
 ### Usage
 
-1. Run `NDS_Controller.nds`. It will automatically turn on Wifi and try connecting.
+1. Run `NDS-Controller.nds`. It will automatically turn on Wifi and try connecting.
 2. Run server program on your pc.
 3. On NDS, input the ip address and server port (defined in server program)
 4. If everything is OK, you should be able to use the NDS gamepad to input now.
