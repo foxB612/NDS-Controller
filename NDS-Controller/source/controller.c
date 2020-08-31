@@ -159,6 +159,19 @@ void controller(int socket)
     iprintf("\nYou can use this NDS as a controller now.\n");
     iprintf("Touch the screen to pause or continue.\n");
     iprintf("To stop, touch the screen while holding Start button.\n");
+    while (1)
+    {
+        swiWaitForVBlank();
+        scanKeys();
+        if (keysDown()) break;
+    }
+    while (1)
+    {
+        swiWaitForVBlank();
+        scanKeys();
+        if (keysUp()) break;
+    }
+    consoleClear();
 
     int keys[2] = {0, 0};
     int size = 2 * sizeof(int);
@@ -169,19 +182,18 @@ void controller(int socket)
         scanKeys();
         keys[0] = keysDown();
         keys[1] = keysUp();
-        if (keys[1] & KEY_TOUCH)
+        if (keys[0] & KEY_TOUCH)
         {
             if (keysHeld() & KEY_START) break;
             flag = !flag;
-            if (flag) iprintf("Continued.\n");
-            else iprintf("Paused.\n");
             continue;
         }
         if (!flag || !(keys[0] || keys[1])) continue;
-        // iprintf("%d %d\n", keys[0], keys[1]);
         send(socket, keys, size, 0);
     }
-
+    keys[0] = -1;
+    keys[1] = -1;
+    send(socket, keys, size, 0); // use two -1s to tell the server to close
     iprintf("Connection closed!\n");
     shutdown(socket,0); // good practice to shutdown the socket.
     closesocket(socket); // remove the socket.
